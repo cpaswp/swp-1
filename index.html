@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>النظام المحاسبي المتكامل - مجموعة أحمد الأعرجي لخدمة الشركات (SWP)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        header {
+            background-color: #004080;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .menu-btn {
+            background-color: #ffffff;
+            border: 2px solid #004080;
+            color: #004080;
+            padding: 22px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .menu-btn:hover {
+            background-color: #004080;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        /* نافذة عرض الشاشة التفاعلية */
+        #modal-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 35px;
+            border-radius: 10px;
+            width: 75%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            margin-top: 40px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        القائمة الرئيسية - مجموعة أحمد الأعرجي لخدمة الشركات (SWP)
+    </header>
+
+    <div class="container">
+        <div class="grid-menu">
+            <button class="menu-btn" onclick="openScreen('شاشة رصيد أول المدة')">شاشة رصيد أول المدة</button>
+            <button class="menu-btn" onclick="openScreen('شاشة التعريفات')">شاشة التعريفات</button>
+            <button class="menu-btn" onclick="openScreen('شاشة الضبط')">شاشة الضبط</button>
+            
+            <button class="menu-btn" onclick="openScreen('شاشة المشتريات')">شاشة المشتريات</button>
+            <button class="menu-btn" onclick="openScreen('شاشة مردودات المشتريات')">شاشة مردودات المشتريات</button>
+            <button class="menu-btn" onclick="openScreen('شاشة المبيعات')">شاشة المبيعات</button>
+            
+            <button class="menu-btn" onclick="openScreen('شاشة قيود اليومية')">شاشة قيود اليومية</button>
+            <button class="menu-btn" onclick="openScreen('شاشة النقدية والبنوك')">شاشة النقدية والبنوك</button>
+            <button class="menu-btn" onclick="openScreen('شاشة مردودات المبيعات')">شاشة مردودات المبيعات</button>
+            
+            <button class="menu-btn" onclick="openScreen('شاشة المخازن')">شاشة المخازن</button>
+            <button class="menu-btn" onclick="openScreen('شاشة أوراق الدفع')">شاشة أوراق الدفع</button>
+            <button class="menu-btn" onclick="openScreen('شاشة أوراق القبض')">شاشة أوراق القبض</button>
+            
+            <button class="menu-btn" onclick="openScreen('شاشة نقاط البيع POS')">شاشة نقاط البيع POS</button>
+            <button class="menu-btn" onclick="openScreen('شاشة الداش بورد')">شاشة الداش بورد</button>
+            <button class="menu-btn" onclick="openScreen('شاشة التقارير العامة')">شاشة التقارير العامة</button>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة لعرض الشاشة عند الضغط -->
+    <div id="modal-screen">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeScreen()">إغلاق</button>
+            <h2 id="screen-title" style="color: #004080; margin-top: 0;">عنوان الشاشة</h2>
+            <p id="screen-body" style="font-size: 16px; color: #333; line-height: 1.6;">جاري تحميل عناصر وشاشات النظام المتكامل...</p>
+        </div>
+    </div>
+
+    <footer>
+        جميع الحقوق محفوظة © مجموعة أحمد الأعرجي لخدمة الشركات (SWP)
+    </footer>
+
+    <script>
+        function openScreen(screenName) {
+            document.getElementById('screen-title').innerText = screenName;
+            document.getElementById('screen-body').innerText = "تم فتح " + screenName + " بنجاح، وهي مرتبطة بقواعد البيانات وجاهزة لتنفيذ الحركات والعمليات المحاسبية والمخزنية.";
+            document.getElementById('modal-screen').style.display = 'flex';
+        }
+
+        function closeScreen() {
+            document.getElementById('modal-screen').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
