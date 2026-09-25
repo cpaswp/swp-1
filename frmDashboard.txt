@@ -1,0 +1,61 @@
+' ========================================================
+' اسم الملف: frmDashboard.txt (كود شاشة الداش بورد)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' 1. تحميل وتحديث المؤشرات والرسوم البيانية للشركة
+    Call LoadCompanyKPIs
+    
+    ' 2. حساب وعرض تكلفة المبيعات ومجمل الربح (قيمة المبيعات - قيمة تكلفة المبيعات)
+    Call LoadSalesAndProfitMetrics
+    
+    ' 3. تحليل تكلفة وإيرادات المشروعات على حدة
+    Call LoadProjectsAnalysis
+    
+    ' 4. عرض تكلفة كل مركز تكلفة داخل المشروع
+    Call LoadCostCenterAnalysis
+    
+    ' 5. عرض تكلفة البند داخل مركز التكلفة
+    Call LoadItemCostPerCostCenter
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل لوحة المؤشرات (الداش بورد): " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadCompanyKPIs()
+    ' عرض الجرافيك والمؤشرات الرقمية لأداء الشركة العام (إجمالي الإيرادات، المصروفات، صافي الربح، السيولة النقدية)
+End Sub
+
+Private Sub LoadSalesAndProfitMetrics()
+    ' حساب قيمة المبيعات، تكلفة المبيعات، ومجمل الربح (قيمة المبيعات - قيمة تكلفة المبيعات)
+    Dim totalSales As Double
+    Dim costOfSales As Double
+    Dim grossProfit As Double
+    
+    totalSales = 0   ' جلب إجمالي المبيعات من الجداول المالية
+    costOfSales = 0  ' جلب إجمالي تكلفة المبيعات
+    grossProfit = totalSales - costOfSales
+    
+    ' تحديث عناصر العرض والرسوم البيانية الخاصة بالمبيعات والربحية
+End Sub
+
+Private Sub LoadProjectsAnalysis()
+    ' عرض مقارنة تكلفة المشروعات وإيرادات المشروعات لكل مشروع على حدة
+End Sub
+
+Private Sub LoadCostCenterAnalysis()
+    ' تحليلات تفصيلية لتكلفة كل مركز تكلفة داخل المشروع
+End Sub
+
+Private Sub LoadItemCostPerCostCenter()
+    ' تحليل وإظهار تكلفة البند داخل مركز التكلفة بشكل هرمي أو جدول بياني تفاعلي
+End Sub
+
+Private Sub cmdRefreshDashboard_Click()
+    ' زر تحديث البيانات لإعادة احتساب كافة مؤشرات الداش بورد لحظياً
+    Call Form_Load
+    MsgBox "تم تحديث بيانات لوحة المؤشرات بنجاح.", vbInformation, "الداش بورد"
+End Sub

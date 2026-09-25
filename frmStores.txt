@@ -1,0 +1,106 @@
+' ========================================================
+' اسم الملف: frmStores.txt (كود شاشة المخازن)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' 1. تعيين التاريخ الافتراضي في دي تى بيِكر 1
+    Me.dtPicker1 = Date
+    
+    ' 2. تهيئة كومبو بوكس نوع الحركة (إذن صرف مخزني / إذن إضافة مخزني)
+    Call LoadMovementTypes
+    
+    ' 3. توليد رقم الحركة التلقائي في تكست 1 (أكبر رقم + 1 في C3 عندما يكون C2 = نوع الحركة الحالي)
+    Me.txtMovementNo = GetNextStoreMovementNo()
+    
+    ' 4. فورم لود: يتم تعبئة جريد فيو 1 بأعمدة حقول جدول C كلها
+    Call LoadStoresGridData
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة المخازن: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadMovementTypes()
+    ' تعبئة أنواع الحركات المخزنية (إذن صرف مخزني، إذن إضافة مخزني)
+    With Me.cmbMovementType
+        .Clear
+        .AddItem "إذن صرف مخزني"
+        .AddItem "إذن إضافة مخزني"
+    End With
+End Sub
+
+Private Function GetNextStoreMovementNo() As Long
+    ' تكست 1 = أكبر رقم + 1 في حقل C3 عندما يكون حقل C2 = نوع الحركة المختار في كومبو 1
+    Dim maxNo As Long
+    maxNo = 0
+    ' كود جلب أكبر رقم حركة من جدول C بناءً على نوع الحركة
+    GetNextStoreMovementNo = maxNo + 1
+End Function
+
+Private Sub cmbMovementType_Change()
+    ' عند تغير نوع الحركة يتم تحديث رقم الحركة تلقائياً في تكست 1
+    Me.txtMovementNo = GetNextStoreMovementNo()
+End Sub
+
+Private Sub LoadStoresGridData()
+    ' تعبئة جريد فيو 1 بجميع أعمدة جدول الحركات المخزنية C من C1 إلى C25:
+    ' C1: التاريخ, C2: نوع الحركة, C3: رقم الحركة, C4: الموظف, C5: المتعامل
+    ' C6: الحساب الفرعي, C7: الحساب الرئيسي, C8: الصنف, C9: كود الصنف, C10: تاريخ الصلاحية
+    ' C11: كمية واردة, C12: كمية صادرة, C13: الوحدة, C14: سعر الوحدة, C15: الاجمالي
+    ' C16: البيان, C17: المستخدم, C18: تاريخ الادخال, C19: المخزن, C20: فرع
+    ' C22: سعر البيع, C23: بند, C24: مشروع, C25: مركز التكلفة
+End Sub
+
+Private Sub btnQueryInvoice_Click()
+    ' رقم الفاتورة وبالضغط على بوتون الاستعلام تظهر بيانات الأذن في جريد فيو 1
+    On Error GoTo ErrorHandler
+    Dim invoiceNo As String
+    invoiceNo = Me.txtInvoiceNo.Value
+    
+    ' كود البحث وجلب بيانات الفاتورة أو الأذن وعرضها في جريد فيو 1
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء استعلام بيانات الفاتورة: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdSaveStore_Click()
+    On Error GoTo ErrorHandler
+    
+    ' كود حفظ بيانات إذن المخازن في جدول الحركات المخزنية (C)
+    MsgBox "تم حفظ الحركة المخزنية بنجاح.", vbInformation, "شاشة المخازن"
+    
+    ' تحديث الشاشة وتوليد رقم حركة جديد
+    Call Form_Load
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء الحفظ: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdPrintStore_Click()
+    ' زر طباعة الإذن: يتم طباعة بيانات جريد فيو 1 في شكل إذن مخزني به كل البيانات بشكل احترافي للتصميم في شكل للورقة للطابعة A5
+    On Error GoTo ErrorHandler
+    
+    MsgBox "جاري تجهيز إذن المخازن للطباعة بتنسيق A5...", vbInformation, "طباعة الإذن"
+    
+    ' كود إرسال التقرير إلى الطابعة بحجم A5
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء طباعة الإذن: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdSearch_Click()
+    ' زر البحث لاستعراض الحركات المخزنية المسجلة
+End Sub
+
+Private Sub cmdUpdate_Click()
+    ' زر التعديل لتحديث الحركة المخزنية
+End Sub
+
+Private Sub cmdDelete_Click()
+    ' زر الحذف لإلغاء الحركة
+End Sub

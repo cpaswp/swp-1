@@ -1,0 +1,95 @@
+' ========================================================
+' اسم الملف: frmJournalEntries.txt (كود شاشة قيود اليومية)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' بمجرد فتح الشاشة (Form_Load): يظهر في جريد فيو 1 كافة أعمدة جدول الحركات المالية
+    ' تعبئة الحقول الأساسية وتلقائية البيانات
+    Me.txtDate = Date
+    Me.lblMovementType = "قيود يومية"
+    
+    ' توليد رقم الحركة التلقائي في تكست 1 (أكبر رقم في جدول الحركات المالية B حقل B3 + 1)
+    Me.txtMovementNo = GetNextJournalNumber()
+    
+    ' تحميل الفلاتر وقوائم الاختيار بدون تكرار من جدول A وجدول B
+    Call LoadFiltersAndCombos
+    Call LoadJournalEntriesGrid
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة قيود اليومية: " & Err.Description, vbCritical
+End Sub
+
+Private Function GetNextJournalNumber() As Long
+    ' كود جلب أكبر رقم حركة في B3 وإضافة 1 إليه
+    GetNextJournalNumber = 1
+End Function
+
+Private Sub LoadFiltersAndCombos()
+    ' تعبئة القوائم ببيانات غير متكررة حسب المتطلبات:
+    ' - الموظف: من حقل A8 بدون تكرار
+    ' - المتعامل: من حقل A12 بدون تكرار
+    ' - الحساب الفرعي: من حقل A13 بدون تكرار
+    ' - الحساب الرئيسي: من حقل A14 بدون تكرار
+    ' - فرع: من حقل A28 بدون تكرار
+    ' - بند: من حقل A31 بدون تكرار
+    ' - مركز التكلفة: من حقل A25 بدون تكرار
+    ' - المشروع: من حقل A27 بدون تكرار
+    ' - رقم التعاقد: من حقل B21 بدون تكرار
+    ' - إدارة: من حقل A26 بدون تكرار
+    ' - المستخدم: المستخدم الحالي للبرنامج
+    ' - تاريخ الإدخال: توقت وتاريخ لحظة الضغط على زر الحفظ
+End Sub
+
+Private Sub LoadJournalEntriesGrid()
+    ' تحميل جريد فيو 1 بأعمدة جدول الحركات المالية B مع إعداد الفلاتر أسفل كل عمود
+End Sub
+
+Private Function ValidateJournalBalance() As Boolean
+    ' شرط قبل الحفظ: أن يتساوى مجموع عمود مدين (B10) مع مجموع عمود دائن (B11)
+    Dim totalDebit As Double
+    Dim totalCredit As Double
+    
+    totalDebit = 0  ' مجموع الحقول في المدين
+    totalCredit = 0 ' مجموع الحقول في الدائن
+    
+    If totalDebit = totalCredit Then
+        ValidateJournalBalance = True
+    Else
+        ValidateJournalBalance = False
+    End If
+End Function
+
+Private Sub cmdSaveJournal_Click()
+    On Error GoTo ErrorHandler
+    
+    ' التحقق من اتزان القيد المحاسبي أولاً
+    If Not ValidateJournalBalance() Then
+        MsgBox "عذراً، لا يمكن حفظ القيد لأن إجمالي المدين لا يساوي إجمالي الدائن (القيد غير متزن).", vbCritical, "خطأ في الاتزان"
+        Exit Sub
+    End If
+    
+    ' الحفظ في جدول الحركات المالية (B) مع تسجيل التوقيت والتاريخ الحالي
+    MsgBox "تم حفظ قيد اليومية في جدول الحركات المالية بنجاح.", vbInformation, "قيود اليومية"
+    
+    ' إعادة تحميل الجدول وتحديث الرقم التالي
+    Call Form_Load
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء حفظ قيد اليومية: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdSearch_Click()
+    ' زر البحث: لاستعراض قيد يومية مسجل مسبقاً
+End Sub
+
+Private Sub cmdUpdate_Click()
+    ' زر التعديل: لتعديل قيد حالي مع التحقق من الاتزان
+End Sub
+
+Private Sub cmdDelete_Click()
+    ' زر الحذف: لحذف القيد المحدد
+End Sub

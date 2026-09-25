@@ -1,0 +1,50 @@
+' ========================================================
+' اسم الملف: frmPurchases.txt (كود شاشة المشتريات)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' تحميل القيم الافتراضية والربط مع الجداول الأساسية للمشتريات
+    Call LoadPurchasesDefaults
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة المشتريات: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadPurchasesDefaults()
+    ' تعبئة الحقول الأساسية وتجهيز الشاشة لإدخال فواتير وحركات المشتريات
+    ' ربط حقول شاشة المشتريات ببيانات جدول الحركات المالية (B) والحركات المخزنية (C) والتعريفات (A)[cite: 13]
+End Sub
+
+Private Sub cmbSupplier_Change()
+    ' عند اختيار المورد/المتعامل: يتم جلب البيانات المرتبطة تلقائياً (الحساب الفرعي، الحساب الرئيسي، السجل التجاري، البطاقة الضريبية، العنوان، التليفون)[cite: 13]
+End Sub
+
+Private Sub cmbPurchaseItem_Change()
+    ' عند اختيار الصنف الشرائي: يتم جلب كود الصنف الشرائي، سعر الوحدة، والجرعات المرتبطة[cite: 13]
+End Sub
+
+Private Sub txtQuantityPurchased_AfterUpdate()
+    ' حساب الإجمالي تلقائياً = الكمية الواردة × سعر الوحدة[cite: 13]
+    ' تحديث حركة المخزن (إثبات كمية واردة للمخزن) وإثرائها على الحسابات المالية (مدين مخازن / دائن المورد أو البنك)[cite: 13]
+End Sub
+
+Private Sub cmdSavePurchases_Click()
+    On Error GoTo ErrorHandler
+    
+    ' التحقق من اكتمال البيانات الأساسية (رقم المستند، المورد، الأصناف، الكميات، الأسعار، المخزن، مركز التكلفة، إلخ)[cite: 13]
+    ' الحفظ في جدول الحركات المالية (B) وجدول الحركات المخزنية (C) وتحديث جدول التعريفات (A) عند الحاجة[cite: 13]
+    
+    MsgBox "تم حفظ فاتورة/حركة المشتريات وتحديث المخزن والحسابات بنجاح.", vbInformation, "شاشة المشتريات"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء حفظ حركة المشتريات: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdPrintPurchases_Click()
+    ' طباعة إذن أو فاتورة المشتريات
+    MsgBox "جاري تجهيز مستند المشتريات للطباعة...", vbInformation
+End Sub

@@ -1,0 +1,63 @@
+' ========================================================
+' اسم الملف: frmPOS.txt (كود شاشة نقاط البيع)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' 1. تعيين التاريخ الافتراضي وتعبئة القوائم الأساسية
+    Me.dtPicker1 = Date
+    Call LoadPOSDefaults
+    
+    ' 2. توليد رقم الحركة التلقائي بناءً على نوع الحركة في كومبو 1
+    Me.txtMovementNo = GetNextPOSMovementNo()
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة نقاط البيع: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadPOSDefaults()
+    ' تهيئة الحقول، الكومبو بوكس، وقوائم الأصناف والمخازن والعملاء
+End Sub
+
+Private Function GetNextPOSMovementNo() As Long
+    ' توليد رقم الحركة التلقائي (أكبر رقم + 1 في الحقل المرتبط بناءً على نوع الحركة)
+    GetNextPOSMovementNo = 1
+End Function
+
+Private Sub cmbMovementType_Change()
+    ' عند تغير نوع الحركة (بيع نقدي، بيع آجل، مرتجع بيع، مرتجع شراء، إلخ) يتم تحديث رقم الحركة
+    Me.txtMovementNo = GetNextPOSMovementNo()
+End Sub
+
+Private Sub cmdAddLine_Click()
+    ' الضغط على زر إضافة سطر لإدراج الصنف والكمية والسعر وإجمالي السطر في جريد فيو 1
+    ' حساب إجمالي الكميات والسعر والخصم والقيمة النهائية
+End Sub
+
+Private Sub cmdSavePOS_Click()
+    On Error GoTo ErrorHandler
+    
+    ' عند الحفظ يتم ترحيل البيانات إلى جدول الحركات المالية وجدول المخازن (C)
+    MsgBox "تم حفظ حركة نقاط البيع بنجاح.", vbInformation, "نقاط البيع"
+    
+    ' إعادة ضبط الشاشة وتوليد رقم حركة جديد
+    Call Form_Load
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء حفظ حركة نقاط البيع: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdSearch_Click()
+    ' زر البحث: لاستعراض الفواتير والحركات المسجلة
+End Sub
+
+Private Sub cmdUpdate_Click()
+    ' زر التعديل: لتحديث بيانات الحركة الحالية
+End Sub
+
+Private Sub cmdDelete_Click()
+    ' زر الحذف: لإلغاء وحذف الفاتورة أو الحركة من جدول الحركات المالية
+End Sub

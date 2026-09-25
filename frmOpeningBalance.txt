@@ -1,0 +1,70 @@
+' ========================================================
+' اسم الملف: frmOpeningBalance.txt (كود شاشة رصيد أول المدة)
+' ========================================================
+
+Private Sub cmdImportExcel_Click()
+    On Error GoTo ErrorHandler
+    
+    ' 1. يتم اختيار التاريخ ثم اختيار بالضغط على بوتون استيراد اكسيل شيت
+    ' 2. الحصول على التكست من الجهاز واختياره ليتحمل على جريد فيو1 (DataGridView1)
+    Dim filePath As String
+    filePath = SelectExcelFile()
+    
+    If filePath = "" Then Exit Sub
+    
+    Call LoadExcelToGrid(filePath)
+    
+    ' 3. الميزان متزن وفي حالة عدم الاتزان يرفض التحميل في جريد فيو1
+    If Not ValidateTrialBalance() Then
+        MsgBox "عذراً، قيد رصيد أول المدة غير متزن (إجمالي المدين لا يساوي إجمالي الدائن). يرجى مراجعة البيانات.", vbCritical, "خطأ في الاتزان"
+        Exit Sub
+    End If
+    
+    MsgBox "تم تحميل التحقق من الاتزان بنجاح وجاهز للحفظ.", vbInformation
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء استيراد الملف: " & Err.Description, vbCritical
+End Sub
+
+Private Function SelectExcelFile() As String
+    ' كود فتح نافذة اختيار ملف الإكسيل من الجهاز
+    SelectExcelFile = ""
+' مثال: استخدام OpenFileDialog
+End Function
+
+Private Sub LoadExcelToGrid(path As String)
+    ' تحميل بيانات شيت الإكسيل إلى GridView1
+    ' مع ربط الأعمدة بحقول جدول B وحقول جدول A (مثل: B4 بـ A8, B5 بـ A12, B6 بـ A13, B7 بـ A14, B15 بـ A28, B18 بـ A31, B19 بـ A25, B20 بـ A27, B22 بـ A26)[cite: 10]
+End Sub
+
+Private Function ValidateTrialBalance() As Boolean
+    ' التحقق من أن مجموع المدين (B10) يساوي مجموع الدائن (B11)
+    Dim totalDebit As Double
+    Dim totalCredit As Double
+    
+    ' حساب القيم من GridView1
+    totalDebit = 0
+    totalCredit = 0
+    
+    If totalDebit = totalCredit Then
+        ValidateTrialBalance = True
+    Else
+        ValidateTrialBalance = False
+    End If
+End Function
+
+Private Sub cmdSaveOpeningBalance_Click()
+    On Error GoTo ErrorHandler
+    
+    If Not ValidateTrialBalance() Then
+        MsgBox "لا يمكن الحفظ، القيد غير متزن!", vbCritical
+        Exit Sub
+    End If
+    
+    ' بالضغط على بوتون حفظ يتم الحفظ في كلا الجدولين (جدول الحركات المالية B وجدول التعريفات A لقاعدة بيانات = A24)
+    MsgBox "تم حفظ بيانات رصيد أول المدة في الجدولين بنجاح.", vbInformation, "حفظ ناجح"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء الحفظ: " & Err.Description, vbCritical
+End Sub

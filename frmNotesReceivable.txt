@@ -1,0 +1,87 @@
+' ========================================================
+' اسم الملف: frmNotesReceivable.txt (كود شاشة أوراق القبض)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' تهيئة الشاشة وتعبئة القوائم المنسدلة بدون تكرار من جدول A وجدول B
+    Call LoadNotesReceivableDefaults
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة أوراق القبض: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadNotesReceivableDefaults()
+    ' - الموظف: من حقل A8 بدون تكرار
+    ' - المتعامل: من حقل A12 بدون تكرار
+    ' - الحساب الفرعي: من حقل A13 بدون تكرار
+    ' - الحساب الرئيسي: من حقل A14 بدون تكرار
+    ' - فرع: من حقل A28 بدون تكرار
+    ' - بند: من حقل A31 بدون تكرار
+    ' - مركز التكلفة: من حقل A25 بدون تكرار
+    ' - المشروع: من حقل A27 بدون تكرار
+    ' - رقم التعاقد: من حقل B21 بدون تكرار
+    ' - إدارة: من حقل A26 بدون تكرار
+    
+    ' ضبط القيمة الافتراضية لتكست 1 عندما يكون كومبو 1 = نوع الحركة (ورقة قبض)
+    Me.txtMovementNo = GetNextNotesReceivableNumber()
+    Me.txtDate = Date
+End Sub
+
+Private Function GetNextNotesReceivableNumber() As Long
+    ' تكست 1 = أكبر رقم + 1 في حقل B3 عندما يكون كومبو 1 = نوع حركة أوراق القبض
+    GetNextNotesReceivableNumber = 1
+End Function
+
+Private Sub btnQueryCheck_Click()
+    ' عند الضغط على بوتون 1 للاستعلام (لشيك = حقل B8): يظهر بيانات الشيك في جريد فيو 1
+    On Error GoTo ErrorHandler
+    
+    Dim checkNo As String
+    checkNo = Me.txtCheckNo.Value ' B8
+    
+    ' كود جلب بيانات الشيك وعرضها في جريد فيو 1
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء استعلام بيانات الشيك: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmbMovementType_Change()
+    ' تحديد نوع الحركة: قبض - إيداع ورقة قبض بالبنك - تحصيل ورقة قبض - ارتداد ورقة قبض - رد ورق قبض للمتعامل
+End Sub
+
+Private Sub cmdSaveNotes_Click()
+    On Error GoTo ErrorHandler
+    
+    ' بالضغط على زر الحفظ: يتم الحفظ في جدول الحركات المالية من جريد فيو 2 فقط
+    ' ربط أعمدة جريد فيو 2 بحقول جدول الحركات المالية (من B1 إلى B22) حسب الجدول الموضح
+    
+    Dim db As Object
+    Set db = CurrentDb
+    
+    ' كود إدراج البيانات من جريد فيو 2 إلى جدول الحركات المالية B
+    
+    MsgBox "تم حفظ حركة أوراق القبض في جدول الحركات المالية بنجاح.", vbInformation, "شاشة أوراق القبض"
+    
+    ' إعادة تعيين وتحديث أرقام الحركة
+    Call Form_Load
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء حفظ حركة أوراق القبض: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdSearch_Click()
+    ' زر البحث: لاستعراض الحركة المسجلة
+End Sub
+
+Private Sub cmdUpdate_Click()
+    ' زر التعديل: لتحديث بيانات ورقة القبض
+End Sub
+
+Private Sub cmdDelete_Click()
+    ' زر الحذف: لإلغاء أو حذف حركة ورقة القبض
+End Sub

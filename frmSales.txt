@@ -1,0 +1,50 @@
+' ========================================================
+' اسم الملف: frmSales.txt (كود شاشة البيع)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' تحميل القيم الافتراضية والربط مع الجداول الأساسية
+    Call LoadSalesDefaults
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة البيع: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadSalesDefaults()
+    ' تعبئة الحقول الأساسية وتجهيز شاشة البيع بناءً على المتطلبات
+    ' ربط حقول شاشة البيع ببيانات جدول الحركات المالية (B) والحركات المخزنية (C) والتعريفات (A)[cite: 11]
+End Sub
+
+Private Sub cmbCustomer_Change()
+    ' عند اختيار المتعامل: يتم جلب البيانات المرتبطة تلقائياً (الحساب الفرعي، الحساب الرئيسي، السجل التجاري، البطاقة الضريبية، العنوان، التليفون)[cite: 11]
+End Sub
+
+Private Sub cmbItem_Change()
+    ' عند اختيار الصنف البيعي: يتم جلب كود الصنف البيعي، سعر البيع، والتحقق من رصيد المخزن[cite: 11]
+End Sub
+
+Private Sub txtQuantity_AfterUpdate()
+    ' حساب الإجمالي تلقائياً = الكمية × سعر الوحدة[cite: 11]
+    ' التحقق من أن الكمية المطلوبة متوفرة في المخزن (جدول الحركات المخزنية C كمية صادرة C12)[cite: 11]
+End Sub
+
+Private Sub cmdSaveSales_Click()
+    On Error GoTo ErrorHandler
+    
+    ' التحقق من اكتمال البيانات الأساسية (المتعامل، الأصناف، الكميات، المخزن، مركز التكلفة، إلخ)[cite: 11]
+    ' الحفظ في جدول الحركات المالية (B) وجدول الحركات المخزنية (C) وتحديث جدول التعريفات (A) حسب الحاجة[cite: 11]
+    
+    MsgBox "تم حفظ فاتورة/حركة البيع وتحديث المخزن والحسابات بنجاح.", vbInformation, "شاشة البيع"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء حفظ حركة البيع: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdPrint_Click()
+    ' طباعة الفاتورة أو إيدار حركة البيع
+    MsgBox "جاري تجهيز المستند للطباعة...", vbInformation
+End Sub

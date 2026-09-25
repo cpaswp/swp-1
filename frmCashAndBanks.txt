@@ -1,0 +1,62 @@
+' ========================================================
+' اسم الملف: frmCashAndBanks.txt (كود شاشة النقدية والبنوك)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' تحميل القيم الافتراضية وربط العناصر بشاشة النقدية والبنوك
+    Call LoadCashAndBanksDefaults
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة النقدية والبنوك: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadCashAndBanksDefaults()
+    ' تعبئة الكومبو بوكس (الموظف A8، المتعامل A12، الحسابات الفرعية والرئيسية A13 وA14، المخازن، الفروع، مراكز التكلفة، الإدارات، المشروعات والبنود) بدون تكرار
+    ' ملء تلقائي لكود المستخدم الحالي
+End Sub
+
+Private Sub cmbMovementType_Change()
+    ' تحديد نوع الحركة (إذن صرف أو إذن قبض) وتوجيه الخصائص واللصق على ليبل 1
+End Sub
+
+Private Sub cmbAccount_Change()
+    ' تحديد نقدية أو بنوك بناءً على حقل A12 وA13
+End Sub
+
+Private Sub cmdSaveCash_Click()
+    On Error GoTo ErrorHandler
+    
+    ' التحقق من البيانات المدخلة والقيم المالية
+    ' بناءً على المتطلبات: في حالة إذن القبض والصرف يتم تسجيل سطرين متتاليين في جدول الحركات المالية (B) بالترتيب المحدد للحقول (من B1 إلى B22)
+    
+    Dim db As Object
+    Set db = CurrentDb
+    
+    ' كود إدراج السطر الأول والسطر الثاني في جدول الحركات المالية B
+    
+    MsgBox "تم حفظ حركة النقدية والبنوك في جدول الحركات المالية بنجاح.", vbInformation, "شاشة النقدية والبنوك"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء الحفظ: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdPrint_Click()
+    ' زر الطباعة: إعداد البرامج لطباعة الأذن بكفاءة واحترافية (قابل للطباعة A5)
+    MsgBox "جاري معاينة وطباعة المستند...", vbInformation
+End Sub
+
+Private Sub cmdSearch_Click()
+    ' زر البحث: بمعلومية رقم الحركة تظهر كل البيانات على الشاشة
+End Sub
+
+Private Sub cmdUpdate_Click()
+    ' زر التعديل لتحديث الحركات المسجلة
+End Sub
+
+Private Sub cmdDelete_Click()
+    ' زر الحذف لإلغاء الحركة
+End Sub

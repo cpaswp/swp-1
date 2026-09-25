@@ -1,0 +1,80 @@
+' ========================================================
+' اسم الملف: frmGeneralReports.txt (كود شاشة التقارير العامة)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' 1. تعبئة كومبو بوكس 1 بأنواع التقارير المطلوبة
+    Call LoadReportTypes
+    
+    ' 2. ضبط تواريخ الفترة الافتراضية (من وإلى دي تي بيِكر 1 و 2)
+    Me.dtPicker1 = Date - 30
+    Me.dtPicker2 = Date
+    
+    ' 3. تحميل أعمدة جدول الحركات المالية (B) وإعداد الفلاتر
+    Call LoadGeneralReportsGrid
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة التقارير العامة: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadReportTypes()
+    With Me.cmbReportType
+        .Clear
+        .AddItem "تقرير ميزان المراجعة"
+        .AddItem "تقرير حساب في فترة"
+        .AddItem "تقرير متنوع"
+        .AddItem "تقرير صنف في فترة"
+        .AddItem "تقرير صلاحية صنف"
+        .AddItem "تقرير موظف"
+    End With
+End Sub
+
+Private Sub LoadGeneralReportsGrid()
+    ' تحميل عرض الأعمدة المرتبطة بجدول B وتطبيق الفلاتر بدون تكرار للبيانات:
+    ' - الموظف (B4): فلتر من جدول A8
+    ' - المتعامل (B5): فلتر من جدول A12
+    ' - الحساب الفرعي (B6): فلتر من جدول A13
+    ' - الحساب الرئيسي (B7): فلتر من جدول A14
+    ' - رقم الشيك (B8): فلتر
+    ' - المستخدم (B13): فلتر
+    ' - فرع (B15): فلتر من جدول A28
+    ' - بند (B18): فلتر من جدول A31
+    ' - مركز التكلفة (B19): فلتر من جدول A25
+    ' - المشروع (B20): فلتر من جدول A27
+    ' - رقم التعاقد (B21): فلتر من جدول B
+    ' - إدارة (B22): فلتر من جدول A26
+End Sub
+
+Private Sub cmbReportType_Change()
+    ' عند اختيار نوع التقرير يتم تحديث المعايير والشروط في الواجهة
+    Dim selectedReport As String
+    selectedReport = Me.cmbReportType.Value
+    Call ApplyReportFilter(selectedReport)
+End Sub
+
+Private Sub ApplyReportFilter(reportName As String)
+    ' تطبيق شروط الفلترة بحسب نوع التقرير المختار والفترة بين دي تي بيِكر 1 و 2
+End Sub
+
+Private Sub cmdHideColumns_Click()
+    ' إمكانية عمل إخفاء لبعض الأعمدة التي لا تظهر في التقرير
+    MsgBox "تم إخفاء الأعمدة المحددة بنجاح.", vbInformation
+End Sub
+
+Private Sub cmdPrintReport_Click()
+    On Error GoTo ErrorHandler
+    
+    ' بعد الإخفاء للأعمدة وعمل الفلتر على جريد فيو 1:
+    ' عند الضغط على بوتون الطباعة يتم نقل كل البيانات الموجودة في جريد فيو 1 إلى ريبورت للطباعة مصمم بشكل احترافي
+    ' ومحدد من فوق اسم التقرير كما تم اختياره في كومبو بوكس و التاريخ من دي تي بيِكر 1 الى دي تي بيِكر 2
+    ' وفي ذيل صفحات التقرير كود المستخدم الذي ضغط زر الطباعة وأيضا رقم الصفحة في ذيل كل صفحة
+    
+    MsgBox "جاري تجهيز وتصدير التقرير للطباعة بشكل احترافي...", vbInformation, "طباعة التقارير"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء طباعة التقرير: " & Err.Description, vbCritical
+End Sub

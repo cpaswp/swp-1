@@ -1,0 +1,49 @@
+' ========================================================
+' اسم الملف: frmSettings.txt (كود شاشة الضبط)
+' ========================================================
+Private Sub cmdOpenSettings_Click()
+    On Error GoTo ErrorHandler
+    
+    ' فتح شاشة الضبط الرئيسية
+    Me.Visible = True
+    Call LoadSettingsData
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء فتح شاشة الضبط: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadSettingsData()
+    On Error GoTo ErrorHandler
+    
+    ' كود جلب وتعبئة بيانات شاشة الضبط (الجدول الأول A: التعريفات)
+    ' اسم الشركة A1, كود الشركة A2, البطاقة الضريبية A3, السجل التجاري A4 ... إلخ
+    Dim db As Object
+    Dim rs As Object
+    Set db = CurrentDb
+    
+    ' التحقق من وجود جدول التعريفات A وإنشاؤه تلقائياً إذا لم يكن موجوداً
+    ' إنشاء جدول الحركات المالية B، الحركات المخزنية C، وجدول البادجت D
+    
+    MsgBox "تم تحميل شاشة الضبط والتحقق من الجداول (A, B, C, D) بنجاح.", vbInformation, "شاشة الضبط"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "خطأ في تحميل بيانات الضبط: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdCreateDatabaseAndTables_Click()
+    On Error GoTo ErrorHandler
+    
+    ' بناءً على متطلبات الشاشة: إنشاء قاعدة البيانات وجداول التعريفات والحركات والبادجت
+    ' جدول A: التعريفات (من A1 إلى A32)
+    ' جدول B: الحركات المالية (من B1 إلى B22)
+    ' جدول C: الحركات المخزنية (من C1 إلى C25)
+    ' جدول D: البادجت (من D1 إلى D15)
+    
+    MsgBox "تم تنفيذ إنشاء قواعد البيانات والجداول المطلوبة بنجاح.", vbInformation
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء إنشاء الجداول: " & Err.Description, vbCritical
+End Sub

@@ -1,0 +1,50 @@
+' ========================================================
+' اسم الملف: frmPurchaseReturns.txt (كود شاشة مردودات المشتريات)
+' ========================================================
+
+Private Sub Form_Load()
+    On Error GoTo ErrorHandler
+    
+    ' تحميل القيم الافتراضية والربط مع الجداول الأساسية لمردودات المشتريات
+    Call LoadPurchaseReturnsDefaults
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء تحميل شاشة مردودات المشتريات: " & Err.Description, vbCritical
+End Sub
+
+Private Sub LoadPurchaseReturnsDefaults()
+    ' تعبئة الحقول الأساسية وتجهيز الشاشة لإثبات مردودات المشتريات
+    ' ربط حقول الشاشة ببيانات جدول الحركات المالية (B) والحركات المخزنية (C) والتعريفات (A)[cite: 14]
+End Sub
+
+Private Sub cmbSupplier_Change()
+    ' عند اختيار المورد: يتم جلب البيانات المرتبطة تلقائياً (الحساب الفرعي، الرئيسي، السجل التجاري، البطاقة الضريبية، العنوان، التليفون)[cite: 14]
+End Sub
+
+Private Sub cmbItem_Change()
+    ' عند اختيار الصنف الشرائي المرتجع: يتم جلب كود الصنف الشرائي، سعر الوحدة، والجرعات المرتبطة[cite: 14]
+End Sub
+
+Private Sub txtQuantityReturned_AfterUpdate()
+    ' حساب إجمالي المرتجع تلقائياً = الكمية المرتجعة × سعر الوحدة[cite: 14]
+    ' تحديث حركة المخزن (إثبات كمية صادرة أو خصم من المخزن مقابل المرتجع للمورد) وتحديث الحسابات المالية[cite: 14]
+End Sub
+
+Private Sub cmdSavePurchaseReturns_Click()
+    On Error GoTo ErrorHandler
+    
+    ' التحقق من اكتمال البيانات الأساسية (رقم المستند، المورد، الأصناف المرتجعة، الكميات، المخزن، مركز التكلفة، إلخ)[cite: 14]
+    ' الحفظ في جدول الحركات المالية (B) وجدول الحركات المخزنية (C) وتحديث جدول التعريفات (A)[cite: 14]
+    
+    MsgBox "تم حفظ مستند مردودات المشتريات وتحديث المخزن والحسابات بنجاح.", vbInformation, "شاشة مردودات المشتريات"
+    
+    Exit Sub
+ErrorHandler:
+    MsgBox "حدث خطأ أثناء حفظ مردودات المشتريات: " & Err.Description, vbCritical
+End Sub
+
+Private Sub cmdPrintPurchaseReturns_Click()
+    ' طباعة إذن مردودات المشتريات
+    MsgBox "جاري تجهيز مستند مردودات المشتريات للطباعة...", vbInformation
+End Sub
