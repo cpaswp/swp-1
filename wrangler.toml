@@ -1,0 +1,11 @@
+name = "swp-budjet-auth"
+main = "worker/otp-worker.js"
+compatibility_date = "2026-10-01"
+
+[[kv_namespaces]]
+binding = "AUTH_KV"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+ALLOWED_ORIGIN = "https://cpaswp.github.io"
+MAIL_FROM = "SWP-BUDJET <onboarding@resend.dev>"
