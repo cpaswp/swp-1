@@ -33,7 +33,7 @@ const readDB=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){
 let db=readDB(),scene,camera,renderer,controls,raycaster,mouse,objects=[],selected=null,current=[];
 const n=x=>Number(x)||0,fmt=x=>n(x).toLocaleString('en-US',{maximumFractionDigits:2}),pct=(a,b)=>b?Math.max(0,Math.min(100,a/b*100)):0;
 const master=(k,id)=>db.masters?.[k]?.find(x=>x.id===id),name=(k,id)=>master(k,id)?.name||'غير محدد',all=(arr)=>arr.reduce((s,r)=>s+n(r.qty),0);
-function contractQty(costId,unitId){return (db.contracts||[]).filter(c=>c.costId===costId&&(!unitId||c.unitId===unitId)).reduce((s,c)=>s+n(c.qty),0)}
+function contractQty(costId,unitId){return (db.contracts||[]).filter(c=>c.costId===costId&&(!unitId||c.unitId===unitId)&&(!c.parentContractId||(db.amendments||[]).some(a=>a.id===c.amendmentId&&a.status==='approved'))).reduce((s,c)=>{let q=n(c.qty);(db.amendments||[]).filter(a=>a.contractId===c.id&&a.status==='approved'&&a.type==='quantity_increase').forEach(a=>q+=n(a.addQty));return s+q},0)}
 function claimQty(costId,unitId){return (db.claims||[]).filter(c=>c.costId===costId&&(!unitId||c.unitId===unitId)).reduce((s,c)=>s+n(c.qty),0)}
 function budgetQty(costId,unitId){return (db.budget||[]).filter(b=>b.costId===costId&&(!unitId||b.unitId===unitId)).reduce((s,b)=>s+n(b.qty),0)}
 function claimValue(costId,unitId){return (db.claims||[]).filter(c=>c.costId===costId&&(!unitId||c.unitId===unitId)).reduce((s,c)=>s+n(c.qty)*n(c.price),0)}
