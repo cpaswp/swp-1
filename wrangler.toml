@@ -4,7 +4,7 @@ compatibility_date = "2026-10-01"
 
 [[kv_namespaces]]
 binding = "AUTH_KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "a262de4cc6d14cf2b75edbd17381a3af"
 
 [vars]
 ALLOWED_ORIGIN = "https://cpaswp.github.io"
