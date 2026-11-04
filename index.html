@@ -266,7 +266,7 @@ function swpAdminLogin(){
   try{sessionStorage.setItem(SWP_AUTH_TOKEN,JSON.stringify(SWP_ADMIN_SESSION));localStorage.setItem('swpbudjet.auth.admin',JSON.stringify({email:SWP_AUTH_EMAIL,role:'admin',isAdmin:true,permissions:['*']}));}catch(storageError){}
   const swpAuthOverlay=document.getElementById('swpAuth');
   if(swpAuthOverlay){swpAuthOverlay.classList.add('auth-hide');swpAuthOverlay.style.display='none';swpAuthOverlay.setAttribute('aria-hidden','true');}
-  const swpShell=document.querySelector('.shell');if(swpShell)swpShell.style.display='flex';
+  const swpShell=document.querySelector('.shell');if(swpShell)swpShell.style.display='grid';
   page='dashboard';go('dashboard');normalizeProgramCombos();
  }catch(error){console.error('SWP admin entry error:',error);swpAuthMessage('تعذر الدخول: '+(error&&error.message?error.message:'خطأ غير معروف'));}
 }
