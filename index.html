@@ -265,16 +265,16 @@ function swpLoginRagab(){
 }
 /* Temporary owner admin entry: retain the original OTP workflow, paused only at its send button. */
 function swpAdminLogin(){
- try{
-  const SWP_ADMIN_SESSION={token:'SWP-BUDJET-OWNER-ADMIN-BYPASS',expiresAt:Date.now()+315360000000};
-  const SWP_CURRENT_USER={email:SWP_AUTH_EMAIL,role:'admin',isAdmin:true,permissions:['*']};
-  window.swpCurrentUser=SWP_CURRENT_USER;window.swpIsAdmin=true;
-  try{sessionStorage.setItem(SWP_AUTH_TOKEN,JSON.stringify(SWP_ADMIN_SESSION));localStorage.setItem('swpbudjet.auth.admin',JSON.stringify({email:SWP_AUTH_EMAIL,role:'admin',isAdmin:true,permissions:['*']}));}catch(storageError){}
-  const swpAuthOverlay=document.getElementById('swpAuth');
-  if(swpAuthOverlay){swpAuthOverlay.classList.add('auth-hide');swpAuthOverlay.style.setProperty('display','none','important');swpAuthOverlay.setAttribute('aria-hidden','true');}
-  const swpShell=document.querySelector('.shell');if(swpShell){swpShell.style.setProperty('display','grid','important');swpShell.style.visibility='visible';swpShell.style.opacity='1';}
-  page='dashboard';document.getElementById('crumb').textContent=PAGE.dashboard;render();normalizeProgramCombos();
- }catch(error){console.error('SWP admin entry error:',error);const msg='تعذر الدخول: '+(error&&error.message?error.message:'خطأ غير معروف');swpAuthMessage(msg);alert(msg);}
+ const session={token:'SWP-BUDJET-OWNER-ADMIN-BYPASS',expiresAt:Date.now()+315360000000};
+ const currentUser={email:SWP_AUTH_EMAIL,username:'ragab',role:'admin',isAdmin:true,permissions:['*']};
+ window.swpCurrentUser=currentUser;window.swpIsAdmin=true;window.swpAdminMode=true;
+ try{sessionStorage.setItem(SWP_AUTH_TOKEN,JSON.stringify(session));localStorage.setItem('swpbudjet.auth.admin',JSON.stringify(currentUser));}catch(storageError){console.warn('Session storage unavailable',storageError)}
+ const overlay=document.getElementById('swpAuth');if(overlay){overlay.classList.add('auth-hide');overlay.style.setProperty('display','none','important');overlay.setAttribute('aria-hidden','true')}
+ const shell=document.querySelector('.shell');if(shell){shell.style.setProperty('display','grid','important');shell.style.setProperty('visibility','visible','important');shell.style.setProperty('opacity','1','important')}
+ const root=document.getElementById('app');if(root){root.style.setProperty('display','block','important');root.style.setProperty('visibility','visible','important')}
+ page='dashboard';const crumb=document.getElementById('crumb');if(crumb)crumb.textContent=PAGE.dashboard||'لوحة المؤشرات';
+ try{render();normalizeProgramCombos();swpAuthMessage('')}
+ catch(error){console.error('SWP dashboard render failed after admin entry:',error);if(root){root.innerHTML='<section class="panel"><div class="pagehead"><div><div class="eyebrow">ADMIN WORKSPACE</div><h1>لوحة المؤشرات</h1><div class="subtitle">تم الدخول كمدير النظام. استخدم القائمة الجانبية للوصول إلى جميع الشاشات.</div></div></div><div class="notice warn">تعذر تحميل بعض عناصر لوحة المؤشرات: '+esc(error&&error.message?error.message:'خطأ في العرض')+'. بقية الشاشات متاحة من القائمة الجانبية.</div></section>';}}
 }
 page='dashboard';
 render();
