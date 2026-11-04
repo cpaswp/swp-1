@@ -64,6 +64,20 @@
 <main class="content" id="app"></main></section></div>
 <div class="modalback" id="modal"><div class="modal"><div class="modalhead"><h2 id="modalTitle">التفاصيل</h2><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
 <script>
+/* Early diagnostics registered before the application script, so even a parse-time SyntaxError is shown. */
+(function(){
+ function showEarlyFailure(message){
+  var target=document.getElementById('authError');
+  if(!target){target=document.createElement('div');target.id='swpEarlyDiagnostic';target.setAttribute('role','alert');target.style.cssText='position:fixed;z-index:2147483647;left:12px;right:12px;bottom:12px;max-height:45vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#fff1f2;color:#9f1239;border:2px solid #be123c;border-radius:12px;padding:14px;font: bold 13px/1.6 Arial,sans-serif;box-shadow:0 8px 30px #0004';document.body.appendChild(target)}
+  target.textContent='تشخيص مبكر: حدث خطأ يمنع تشغيل البرنامج.\n'+message;
+  target.style.display='block';
+ }
+ window.addEventListener('error',function(ev){showEarlyFailure('الرسالة: '+(ev.message||'خطأ غير معروف')+'\nالملف: '+(ev.filename||'غير محدد')+'\nالسطر: '+(ev.lineno||'?')+'\nالعمود: '+(ev.colno||'?'));});
+ window.addEventListener('unhandledrejection',function(ev){showEarlyFailure('Promise: '+(ev.reason&&ev.reason.stack||ev.reason&&ev.reason.message||String(ev.reason)));});
+ window.addEventListener('DOMContentLoaded',function(){var b=document.getElementById('swpAdminLoginButton');if(b&&!b.dataset.diagnosticHooked){b.dataset.diagnosticHooked='1';b.addEventListener('click',function(){setTimeout(function(){var e=document.getElementById('authError');if(e&&e.textContent){e.style.display='block';e.style.whiteSpace='pre-wrap'}},0)})}});
+})();
+</script>
+<script>
 window.addEventListener('error',function(ev){const e=document.getElementById('authError');if(e){e.textContent='خطأ JavaScript يمنع التشغيل: '+ev.message+' | السطر '+ev.lineno+' | الملف '+ev.filename;e.style.display='block';e.style.whiteSpace='pre-wrap'}console.error(ev.error||ev.message)});
 window.addEventListener('unhandledrejection',function(ev){const e=document.getElementById('authError');if(e){e.textContent='خطأ Promise: '+(ev.reason&&ev.reason.message||String(ev.reason));e.style.display='block';e.style.whiteSpace='pre-wrap'}console.error(ev.reason)});
 const KEY='swpbudjet.enterprise.v2',FIELDS=['site','project','cost','unit','item'],LABEL={site:'الموقع',project:'المشروع',cost:'مركز التكلفة',unit:'الوحدة',item:'البند'},PAGE={dashboard:'لوحة المؤشرات',budget:'إدارة البادجت',contracts:'إدارة العقود',claims:'المستخلصات',settlement:'تسوية المستخلصات',reports:'مركز التقارير',masters:'البيانات المرجعية',settings:'إعدادات البيانات',amendments:'تعديلات وملاحق العقود',advances:'صرف الدفعات المقدمة والاستثنائية',monitor:'مراقبة التعاقدات'};
