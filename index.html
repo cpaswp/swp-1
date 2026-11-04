@@ -281,6 +281,7 @@ function swpLoginRagab(){
 }
 /* Temporary owner admin entry: retain the original OTP workflow, paused only at its send button. */
 function swpAdminLogin(){let phase='بدء الدخول';try{
+phase='التحقق من بيانات المدير';const username=(document.getElementById('swpAdminUsername')?.value||'').trim(),password=document.getElementById('swpAdminPassword')?.value||'';if(username!=='ragab'||password!=='12345'){swpAuthMessage('اسم المستخدم أو كلمة المرور غير صحيحة.');return}
 phase='حفظ جلسة المدير';const session={token:'SWP-BUDJET-OWNER-ADMIN-BYPASS',expiresAt:Date.now()+315360000000},currentUser={email:SWP_AUTH_EMAIL,username:'ragab',role:'admin',isAdmin:true,permissions:['*']};window.swpCurrentUser=currentUser;window.swpIsAdmin=true;window.swpAdminMode=true;sessionStorage.setItem(SWP_AUTH_TOKEN,JSON.stringify(session));localStorage.setItem('swpbudjet.auth.admin',JSON.stringify(currentUser));
 phase='إخفاء شاشة الدخول';const overlay=document.getElementById('swpAuth');if(!overlay)throw Error('العنصر swpAuth غير موجود');overlay.classList.add('auth-hide');overlay.style.setProperty('display','none','important');overlay.setAttribute('aria-hidden','true');
 phase='إظهار واجهة البرنامج';const shell=document.querySelector('.shell');if(!shell)throw Error('العنصر shell غير موجود');shell.style.setProperty('display','grid','important');shell.style.setProperty('visibility','visible','important');shell.style.setProperty('opacity','1','important');
