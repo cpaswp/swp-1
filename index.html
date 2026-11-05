@@ -276,19 +276,19 @@ function normalizeComboLabel(text){const raw=String(text||'').trim();const parts
 function swpLoginRagab(){
  const username=String(document.getElementById('swpAdminUsername')?.value||'').trim().toLowerCase(),password=String(document.getElementById('swpAdminPassword')?.value||'');
  try{if(username!=='ragab'||password!=='12345'){swpAuthMessage('منع الدخول: فشل فحص بيانات الاعتماد. المستخدم='+username+'؛ طول كلمة المرور='+password.length+'؛ المطلوب ragab/12345');return}
- swpAuthMessage('تم قبول البيانات. جارٍ فتح لوحة المؤشرات...');swpAdminLogin()
+ swpAuthMessage('تم قبول البيانات. جارٍ فتح لوحة المؤشرات...');window.swpAdminLogin()
  }catch(e){const msg='توقف الدخول داخل swpLoginRagab: '+(e.message||String(e))+'\n'+(e.stack||'');swpAuthMessage(msg);console.error(msg,e);alert(msg)}
 }
 /* Temporary owner admin entry: retain the original OTP workflow, paused only at its send button. */
-function swpAdminLogin(){let phase='بدء الدخول';try{
+window.swpAdminLogin=function swpAdminLogin(){let phase='بدء الدخول';try{
 phase='التحقق من بيانات المدير';const username=(document.getElementById('swpAdminUsername')?.value||'').trim(),password=document.getElementById('swpAdminPassword')?.value||'';if(username!=='ragab'||password!=='12345'){swpAuthMessage('اسم المستخدم أو كلمة المرور غير صحيحة.');return}
 phase='حفظ جلسة المدير';const session={token:'SWP-BUDJET-OWNER-ADMIN-BYPASS',expiresAt:Date.now()+315360000000},currentUser={email:SWP_AUTH_EMAIL,username:'ragab',role:'admin',isAdmin:true,permissions:['*']};window.swpCurrentUser=currentUser;window.swpIsAdmin=true;window.swpAdminMode=true;sessionStorage.setItem(SWP_AUTH_TOKEN,JSON.stringify(session));localStorage.setItem('swpbudjet.auth.admin',JSON.stringify(currentUser));
 phase='إخفاء شاشة الدخول';const overlay=document.getElementById('swpAuth');if(!overlay)throw Error('العنصر swpAuth غير موجود');overlay.classList.add('auth-hide');overlay.style.setProperty('display','none','important');overlay.setAttribute('aria-hidden','true');
 phase='إظهار واجهة البرنامج';const shell=document.querySelector('.shell');if(!shell)throw Error('العنصر shell غير موجود');shell.style.setProperty('display','grid','important');shell.style.setProperty('visibility','visible','important');shell.style.setProperty('opacity','1','important');
 phase='تحديد لوحة المؤشرات';const root=document.getElementById('app');if(!root)throw Error('عنصر المحتوى app غير موجود');root.style.setProperty('display','block','important');page='dashboard';const crumb=document.getElementById('crumb');if(crumb)crumb.textContent=PAGE.dashboard||'لوحة المؤشرات';
 phase='تنفيذ render';render();phase='تهيئة القوائم';normalizeProgramCombos();swpAuthMessage('');
-}catch(error){const detail='عائق منع الدخول في المرحلة: '+phase+'\nالسبب: '+(error.message||String(error))+'\nStack: '+(error.stack||'غير متاح');console.error(detail,error);const overlay=document.getElementById('swpAuth');if(overlay){overlay.classList.remove('auth-hide');overlay.style.removeProperty('display');overlay.setAttribute('aria-hidden','false')}const shell=document.querySelector('.shell');if(shell)shell.style.setProperty('display','none','important');swpAuthMessage(detail);alert(detail)}}
-window.swpAdminLogin=swpAdminLogin;
+}catch(error){const detail='عائق منع الدخول في المرحلة: '+phase+'\nالسبب: '+(error.message||String(error))+'\nStack: '+(error.stack||'غير متاح');console.error(detail,error);const overlay=document.getElementById('swpAuth');if(overlay){overlay.classList.remove('auth-hide');overlay.style.removeProperty('display');overlay.setAttribute('aria-hidden','false')}const shell=document.querySelector('.shell');if(shell)shell.style.setProperty('display','none','important');swpAuthMessage(detail);alert(detail)}};
+window.swpAdminLogin=window.swpAdminLogin;
 window.swpLoginRagab=swpLoginRagab;
 page='dashboard';
 render();
