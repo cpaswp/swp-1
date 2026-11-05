@@ -238,7 +238,7 @@ function exportSheet(p){if(!window.XLSX)return toast('تعذر تحميل مكت
 function importNorm(v){return String(v??'').normalize('NFKC').toLocaleLowerCase().replace(/[\u064B-\u065F\u0670ـ]/g,'').replace(/[\s\u00a0]+/g,' ').trim().replace(/[\s\u00a0]/g,'')}function matchClaimContract(x){
  const norm=importNorm,eq=(a,b)=>{const aa=norm(a),bb=norm(b);return !!aa&&!!bb&&aa===bb};
  const textFor=(r,k)=>r[k+'Name']||mname(k,r[k+'Id'])||r[k+'Id']||'';
- const similarity=(a,b)=>{a=norm(a);b=norm(b);if(!a||!b)return 0;if(a===b)return 1;if(a.includes(b)||b.includes(a))return Math.min(a.length,b.length)/Math.max(a.length,b.length)>=.45?.92:.65;const tok=v=>new Set(v.split(/[\\s،,;\\-_/]+/).filter(t=>t.length>1));const aa=tok(a),bb=tok(b);let common=0;aa.forEach(t=>{if(bb.has(t))common++});return common/Math.max(aa.size,bb.size,1)};
+ const similarity=(a,b)=>{a=norm(a);b=norm(b);if(!a||!b)return 0;if(a===b)return 1;if(a.includes(b)||b.includes(a))return Math.min(a.length,b.length)/Math.max(a.length,b.length)>=.45?.92:.65;const tok=v=>new Set(v.split(/[ ,;،/_-]+/).filter(t=>t.length>1));const aa=tok(a),bb=tok(b);let common=0;aa.forEach(t=>{if(bb.has(t))common++});return common/Math.max(aa.size,bb.size,1)};
  const active=(db.contracts||[]).filter(c=>!c.parentContractId);
  if(x.contractId){const direct=active.find(c=>String(c.id)===String(x.contractId));if(direct)return direct}
  if(x.contractNo){const direct=active.filter(c=>eq(c.no,x.contractNo)&&(!x.contractor||similarity(supplierById(c.supplierId)?.name||c.contractor||c.vendor,x.contractor)>=.75));if(direct.length===1)return direct[0]}
