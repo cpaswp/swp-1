@@ -239,7 +239,11 @@ function importNorm(v){return String(v??'').normalize('NFKC').toLocaleLowerCase(
  const norm=importNorm,eq=(a,b)=>{const aa=norm(a),bb=norm(b);return !!aa&&!!bb&&aa===bb};
  const textFor=(r,k)=>r[k+'Name']||mname(k,r[k+'Id'])||r[k+'Id']||'';
  const similarity=(a,b)=>{a=norm(a);b=norm(b);if(!a||!b)return 0;if(a===b)return 1;if(a.includes(b)||b.includes(a))return Math.min(a.length,b.length)/Math.max(a.length,b.length)>=.45?.92:.65;const tok=v=>new Set(v.split(/[ ,;،/_-]+/).filter(t=>t.length>1));const aa=tok(a),bb=tok(b);let common=0;aa.forEach(t=>{if(bb.has(t))common++});return common/Math.max(aa.size,bb.size,1)};
- const allActive=(db.contracts||[]).filter(c=>!c.parentContractId);\n // Claims ContractNo is the supplier's actual contract number (e.g. 1223), not the repeated budget target No (e.g. 1).\n const contractNoKey=norm(x.contractNo);\n const numbered=contractNoKey?allActive.filter(c=>{const sm=supplierById(c.supplierId);return norm(sm?.contractNo)===contractNoKey||norm(c.contractNo)===contractNoKey||norm(c.no)===contractNoKey||norm(String(sm?.name||c.contractor||c.vendor||'').match(/^\\s*([^—–-]+)\\s*[-—–]/)?.[1])===contractNoKey}):[];\n const active=numbered.length?numbered:allActive;
+ const allActive=(db.contracts||[]).filter(c=>!c.parentContractId);
+ // Claims ContractNo is the supplier's actual contract number (e.g. 1223), not the repeated budget target No (e.g. 1).
+ const contractNoKey=norm(x.contractNo);
+ const numbered=contractNoKey?allActive.filter(c=>{const sm=supplierById(c.supplierId);return norm(sm?.contractNo)===contractNoKey||norm(c.contractNo)===contractNoKey||norm(c.no)===contractNoKey||norm(String(sm?.name||c.contractor||c.vendor||'').match(/^\s*([^—–-]+)\s*[-—–]/)?.[1])===contractNoKey}):[];
+ const active=numbered.length?numbered:allActive;
  if(x.contractId){const direct=active.find(c=>String(c.id)===String(x.contractId));if(direct)return direct}
  if(x.contractNo){const direct=active.filter(c=>eq(c.no,x.contractNo)&&(!x.contractor||similarity(supplierById(c.supplierId)?.name||c.contractor||c.vendor,x.contractor)>=.75));if(direct.length===1)return direct[0]}
  const ranked=[];
