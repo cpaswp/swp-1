@@ -401,9 +401,18 @@ function swpSaveClaimBatch(){
  if(!key||!no||!date)return toast('اختر التعاقد وأدخل رقم وتاريخ المستخلص');
  const rows=swpClaimRows(key);let count=0;
  for(const r of rows){const input=document.getElementById('swpClaimNow_'+r.key);if(!input||String(input.value).trim()==='')continue;let q=num(input.value);if(!q)continue;if(r.status==='تعلية بالخصم المؤقت')q=-Math.abs(q);else if(q<0)return toast('لا تدخل كمية سالبة إلا في سطر التعلية بالخصم المؤقت');
-  const h=swpClaimHistory(r),prev=h.reduce((s,x)=>s+num(x.qty),0),target=Math.abs(r.qty);
+  const h=swpClaimHistory(r),prev=h.reduce((s,x)=>s+num(x.qty),0),c=r.line;
+  // Base-contract claims may use approved quantity increases. Reserve quantities already
+  // executed against amendment rows, then validate the base line against the remaining
+  // approved contract quantity (instead of incorrectly limiting it to the original qty).
+  let target=Math.abs(r.qty);
+  if(!r.amendment&&!c.parentContractId){
+   const revisedQty=Math.max(0,num(contractState(c).qty));
+   const amendmentExecuted=db.claims.filter(x=>String(x.contractId||'')===String(c.id)&&String(x.amendmentId||'')!=='').reduce((s,x)=>s+Math.abs(num(x.qty)),0);
+   target=Math.max(0,revisedQty-amendmentExecuted);
+  }
   if(Math.abs(prev+q)>target+1e-8)return toast('الكمية التراكمية تتجاوز كمية السطر: '+r.item+' ('+r.status+')');
-  const c=r.line,amendmentId=r.amendment?.id||'';
+  const amendmentId=r.amendment?.id||'';
   if(db.claims.some(x=>String(x.no||'')===no&&String(x.contractId||'')===String(c.id)&&String(x.amendmentId||'')===amendmentId))return toast('رقم المستخلص مسجل بالفعل لهذا البند أو التعديل: '+r.item);
   const record={id:uid(),no,date,qty:q,price:num(r.price),amount:q*num(r.price),desc:r.item,contractor:c.contractor||'',contractId:c.id,amendmentId,amendmentNo:r.amendment?.no||'',siteId:c.siteId,projectId:c.projectId,costId:c.costId,unitId:c.unitId,itemId:c.itemId,start:c.start||'',end:c.end||''};
   FIELDS.forEach(k=>record[k+'Name']=mname(k,c[k+'Id'])||'');
