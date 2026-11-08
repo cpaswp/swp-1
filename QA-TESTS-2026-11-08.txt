@@ -34,3 +34,10 @@
 - لم يتم تشغيل الواجهة في متصفح فعلي مع قاعدة بيانات المستخدم.
 - لم يُرفق ملف Excel الإنتاجي، لذلك لم يمكن اختبار تطابق كل صفوفه الفعلية أو أسماء أوراقه الخاصة.
 - يلزم تجربة الاستيراد على نسخة بيانات احتياطية قبل استبدال نسخة الإنتاج.
+
+UI performance and bulk-delete checks (2026-11-08):
+- JavaScript syntax checked for all inline scripts with Node.js --check.
+- Contract state results are memoized per render; amendment lookup and budget-line tuple lookup are indexed.
+- Claim cumulative quantities are precomputed once per claims render.
+- Claims grid supports row selection, select-current-page, cross-page selection retention, and one-confirmation bulk deletion.
+- Bulk deletion blocks claims linked to settlements to preserve financial references.
